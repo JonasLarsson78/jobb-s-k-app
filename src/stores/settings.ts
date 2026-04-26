@@ -9,6 +9,7 @@ interface Stored {
   maxAge: number;
   query: string;
   cityNames: string[];
+  cities?: Municipality[];
   linkedinDistance: number;
   afEnabled: boolean;
   linkedinEnabled: boolean;
@@ -36,8 +37,12 @@ function load(): Stored {
   return defaults();
 }
 
-function cityByName(name: string): Municipality | null {
-  return MUNICIPALITIES_FALLBACK.find((m) => m.name === name) ?? null;
+function resolveCities(s: Stored): Municipality[] {
+  if (s.cities && s.cities.length > 0) return s.cities;
+  // Bakåtkompatibilitet: gamla format med bara namn
+  return s.cityNames
+    .map((name) => MUNICIPALITIES_FALLBACK.find((m) => m.name === name) ?? null)
+    .filter(Boolean) as Municipality[];
 }
 
 export const useSettingsStore = defineStore("settings", () => {
@@ -46,7 +51,7 @@ export const useSettingsStore = defineStore("settings", () => {
   const excludeWords = ref<string[]>(s.excludeWords);
   const maxAge = ref(s.maxAge);
   const query = ref(s.query);
-  const cities = ref<Municipality[]>(s.cityNames.map(cityByName).filter(Boolean) as Municipality[]);
+  const cities = ref<Municipality[]>(resolveCities(s));
   const linkedinDistance = ref(s.linkedinDistance);
   const afEnabled = ref(s.afEnabled);
   const linkedinEnabled = ref(s.linkedinEnabled);
@@ -58,6 +63,7 @@ export const useSettingsStore = defineStore("settings", () => {
       maxAge: maxAge.value,
       query: query.value,
       cityNames: cities.value.map((c) => c.name),
+      cities: cities.value,
       linkedinDistance: linkedinDistance.value,
       afEnabled: afEnabled.value,
       linkedinEnabled: linkedinEnabled.value,

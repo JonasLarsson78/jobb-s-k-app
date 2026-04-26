@@ -1,5 +1,7 @@
 # Jobb Sök
 
+![El Pris screenshot](src/assets/Screenshot.png)
+
 macOS-app för att söka svenska jobbannonser från flera källor samtidigt.
 
 ## Funktioner
