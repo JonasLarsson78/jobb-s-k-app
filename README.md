@@ -1,7 +1,38 @@
-# Tauri + Vue + TypeScript
+# Jobb Sök
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+macOS-app för att söka svenska jobbannonser från flera källor samtidigt.
 
-## Recommended IDE Setup
+## Funktioner
 
-- [VS Code](https://code.visualstudio.com/) + [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+- Söker parallellt mot **Arbetsförmedlingen**, **LinkedIn** och **JobbSafari**
+- Filtrera på stad, sökord, max ålder på annonser och avstånd
+- Markera jobb som **Sökt** eller **Ignorerad** — de försvinner från listan och sparas lokalt
+- Exkludera jobb med specifika ord i titel/företag
+- Visa/dölj sökt och ignorerade jobb via knappar i headern
+
+## Utveckling
+
+```bash
+npm install
+npm run tauri dev
+```
+
+## Bygg
+
+```bash
+npm run tauri build
+```
+
+### Ny version + release
+
+```bash
+npm run new:version 1.2.3
+```
+
+Uppdaterar versionsnummer i alla filer, skapar en git-tagg och pushar. GitHub Actions bygger då automatiskt DMG (macOS) och EXE (Windows) och skapar en release.
+
+## Stack
+
+- [Tauri 2](https://tauri.app/) — native shell
+- [Vue 3](https://vuejs.org/) + [Pinia](https://pinia.vuejs.org/) — UI och state
+- Arbetsförmedlingens öppna [jobtechdev.se](https://jobtechdev.se/) API

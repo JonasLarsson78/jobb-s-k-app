@@ -2,6 +2,12 @@
   <div class="app">
     <FilterPanel @search="jobs.search()" />
     <main class="app__main">
+      <div v-if="newVersion" class="app__update-banner">
+        Ny version <strong>{{ newVersion }}</strong> är tillgänglig.
+        <button @click="openReleasePage">Ladda ner</button>
+        <button class="app__update-dismiss" @click="newVersion = null">✕</button>
+      </div>
+
       <header class="app__header">
         <h1>Jobb</h1>
         <div class="app__stats">
@@ -62,6 +68,9 @@ import { useJobsStore, type UnifiedJob } from "./stores/jobs";
 import { useTaxonomyStore } from "./stores/taxonomy";
 import { useJobStatusStore } from "./stores/jobStatus";
 import { CheckCircle, EyeOff } from "lucide-vue-next";
+import { useUpdateChecker } from "./composables/useUpdateChecker";
+
+const { newVersion, openReleasePage } = useUpdateChecker();
 
 const jobs = useJobsStore();
 const taxonomy = useTaxonomyStore();
@@ -89,6 +98,40 @@ onMounted(async () => {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+  }
+
+  &__update-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 18px;
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+    font-size: 13px;
+    color: var(--text-primary);
+    flex-shrink: 0;
+
+    button {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 5px;
+      border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+      &:hover { opacity: 0.85; }
+    }
+  }
+
+  &__update-dismiss {
+    margin-left: auto;
+    background: transparent !important;
+    border: none !important;
+    color: var(--text-secondary) !important;
+    font-size: 14px !important;
+    padding: 0 4px !important;
+    &:hover { color: var(--text-primary) !important; opacity: 1 !important; }
   }
 
   &__header {
