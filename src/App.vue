@@ -9,7 +9,7 @@
       </div>
 
       <header class="app__header">
-        <h1>Jobb</h1>
+        <h1>Jobb <span class="app__version">v{{ appVersion }}</span></h1>
         <div class="app__stats">
           <span v-if="jobs.filteredJobs.length">{{ jobs.filteredJobs.length }} jobb</span>
           <button
@@ -61,6 +61,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
+import { getVersion } from "@tauri-apps/api/app";
 import FilterPanel from "./components/FilterPanel.vue";
 import JobCard from "./components/JobCard.vue";
 import JobModal from "./components/JobModal.vue";
@@ -71,6 +72,7 @@ import { CheckCircle, EyeOff } from "lucide-vue-next";
 import { useUpdateChecker } from "./composables/useUpdateChecker";
 
 const { newVersion, openReleasePage } = useUpdateChecker();
+const appVersion = ref("");
 
 const jobs = useJobsStore();
 const taxonomy = useTaxonomyStore();
@@ -82,6 +84,7 @@ function openModal(job: UnifiedJob) {
 }
 
 onMounted(async () => {
+  appVersion.value = await getVersion();
   await Promise.all([taxonomy.load(), jobStatus.init()]);
   jobs.search();
 });
@@ -144,6 +147,13 @@ onMounted(async () => {
     flex-shrink: 0;
 
     h1 { margin: 0; font-size: 17px; font-weight: 700; }
+  }
+
+  &__version {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-tertiary);
+    margin-left: 4px;
   }
 
   &__stats {
